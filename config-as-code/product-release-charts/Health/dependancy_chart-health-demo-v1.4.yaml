@@ -98,11 +98,7 @@ modules:
       - "backbone"
       - "authn-authz"
       - "core"
-      - "business"
-      - "dss"
-      - "Other"
-      - "frontend"
-      - "health"
+      - "m_health"
     services:
       - egovio/project-factory:factory-0.1-installer-fix-d24c9ec0cd-8
       - egovio/workbench-ui:health-change-5366d1113a-534

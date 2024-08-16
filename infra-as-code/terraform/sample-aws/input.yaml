@@ -1,4 +1,4 @@
-heal# Replace with the name which you want to give to your EKS cluster
+# Replace with the name which you want to give to your EKS cluster
 # Cluster name can have only lowercase alphanumeric characters and hyphens
 # For example: "digit-demo"
 cluster_name: "testhealth-k8supgrade"

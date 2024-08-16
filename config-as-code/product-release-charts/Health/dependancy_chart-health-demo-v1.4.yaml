@@ -80,6 +80,7 @@ modules:
       - "dss"
       - "Other"
       - "frontend"
+      - "m_hcmconsole"
     services:
       - egovio/facility-db:v1.1.2-00a7accbda-14
       - egovio/product-db:v1.1.0-00a7accbda-31
@@ -96,7 +97,6 @@ modules:
       - "backbone"
       - "authn-authz"
       - "core"
-      - "m_health"
     services:
       - egovio/project-factory:factory-0.1-installer-fix-d24c9ec0cd-8
       - egovio/workbench-ui:health-change-5366d1113a-534

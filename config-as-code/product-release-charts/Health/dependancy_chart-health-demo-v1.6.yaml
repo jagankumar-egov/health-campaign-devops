@@ -90,7 +90,7 @@ modules:
       - egovio/household-db:v1.1.3-8208b6fc8f-28
       - egovio/project-db:v1.1.5-8208b6fc8f-12
       - egovio/referralmanagement-db:v1.0.3-8208b6fc8f-40
-      - egovio/service-request-db:v1.0.1-a0e714254c-23
+      - egovio/service-request:service-additional-field-24c971f354-35
       - egovio/health-attendance-db:v1.0.2-30824c427-11
   - name: m_hcmconsole
     dependencies:
@@ -98,5 +98,5 @@ modules:
       - "authn-authz"
       - "core"
     services:
-      - egovio/project-factory-db:project-factory-kafka-fix-a3ca5439b5-24
-      - egovio/workbench-ui:console-0132e7aa64-546
+      - egovio/project-factory:console-b1d7db97cf-148
+      - egovio/workbench-ui:console-86d4be5214-639

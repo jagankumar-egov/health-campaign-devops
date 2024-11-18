@@ -100,6 +100,7 @@ cluster-configs:
               household: "http://household:8080/"
               individual: "http://individual:8080/"
               stock: "http://stock:8080/"
+              plan-service: "http://project:8080/" 
               facility: "http://facility:8080/"
               service-request: "http://service-request:8080/"
 employee:

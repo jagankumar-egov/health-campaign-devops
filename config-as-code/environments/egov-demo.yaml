@@ -485,11 +485,12 @@ product:
 
 
 project-factory:
-  logLevel: 'info'
+  logLevel: 'debug'
   defaultLocale: 'en_MZ'
   splitBoundariesOn: 'ADMIN_DISTRITO'
   replicas: 1
   namespace: 'egov'
+  maxDebugChar: '2000'
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 kafka-config:

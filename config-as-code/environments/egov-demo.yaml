@@ -486,7 +486,7 @@ product:
 
 
 project-factory:
-  logLevel: 'debug'
+  logLevel: 'info'
   defaultLocale: 'en_MZ'
   splitBoundariesOn: 'ADMIN_DISTRITO'
   replicas: 1

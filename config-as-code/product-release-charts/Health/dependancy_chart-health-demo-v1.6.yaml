@@ -98,5 +98,5 @@ modules:
       - "authn-authz"
       - "core"
     services:
-      - egovio/project-factory:console-ed623d0073-155
-      - egovio/workbench-ui:console-26a98f9149-643
+      - egovio/project-factory:console-ed623d0073-156
+      - egovio/workbench-ui:console-c112a09722-646

@@ -37,7 +37,7 @@ modules:
       - egovio/egov-workflow-v2-db:2.9.1-80b58dc788-15
       - egovio/audit-service-db:DIGIT-2.9-LTS-07f47790b8-12
       - egovio/error-handler:master-impel-dump-5022b7acff-1
-      - egovio/playground:1.0
+      - egovio/playground:2.0
       - egovio/mdms-v2:MDMS-v2-2.9LTS-837232ac67-71
       - egovio/boundary-service-db:v1.0.0-063968adc7-18
   - name: business

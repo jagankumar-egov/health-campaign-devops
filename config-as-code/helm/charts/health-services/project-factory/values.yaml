@@ -1,9 +1,9 @@
 # Common Labels
 labels:
   app: "project-factory"
-  group: "health"
+  group: "rainmaker"
 
-namespace: egov
+namespace: health
 
 # Ingress Configs
 ingress:
@@ -16,7 +16,7 @@ ingress:
 initContainers:
   dbMigration:
     enabled: true
-    schemaTable: "project_factory_schema"
+    schemaTable: "project_factory_health_schema"
     image:
       repository: "project-factory-db"
 
@@ -24,7 +24,7 @@ initContainers:
 # Container Configs
 image:
   repository: "project-factory"
-replicas: "2"
+replicas: "3"
 
 # Additional Container Envs
 env: |
@@ -48,7 +48,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: mdms-v2      
+        key: mdms-service-v2      
   - name: EGOV_MDMS_SEARCH_ENDPOINT
     value: "mdms-v2/v1/_search"
   - name: EGOV_MDMS_V1_SEARCH_ENDPOINT
@@ -81,7 +81,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: project
+        key: health-project
   - name: EGOV_USER_HOST
     valueFrom:
       configMapKeyRef:
@@ -96,7 +96,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: egov-hrms
+        key: health-hrms
   - name: EGOV_LOCALIZATION_HOST
     valueFrom:
       configMapKeyRef:
@@ -106,7 +106,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: individual
+        key: health-individual
   - name: EGOV_AUDIT_HOST
     valueFrom:
       configMapKeyRef:
@@ -117,10 +117,19 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: plan-service
+  - name: EGOV_CENSUS_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: census-service
   - name: CONTEXT_PATH
     value: "/project-factory"   
   - name: FILE_STORE_SERVICE_END_POINT
-    value: filestore/v1/files
+    value: filestore/v1/files 
+  - name: EGOV_MDMS_V2_SEARCH_ENDPOINT
+    value: {{ .Values.mdmsV2SearchEndpoint | default "mdms-v2/v2/_search" }}
+  - name: EGOV_MDMS_V1_SEARCH_ENDPOINT
+    value: {{ .Values.mdmsV1SearchEndpoint | default "egov-mdms-service/v1/_search" }}
   - name: EGOV_IDGEN_PATH
     value: egov-idgen/id/_generate
   - name: EGOV_MDMS_SCHEMA_PATH
@@ -134,17 +143,17 @@ env: |
   - name: HEALTH_PROJECT_SEARCH_PATH
     value: project/v1/_search
   - name: HEALTH_PROJECT_CREATE_PATH
-    value: project/v1/_create
+    value: health-project/v1/_create
   - name: EGOV_PROJECT_STAFF_CREATE_PATH
-    value: project/staff/v1/_create
+    value: health-project/staff/v1/_create
   - name: EGOV_HRMS_EMPLOYEE_CREATE_PATH
     value: egov-hrms/employees/_create
   - name: EGOV_HRMS_EMPLOYEE_SEARCH_PATH
     value: egov-hrms/employees/_search
   - name: EGOV_PROJECT_RESOURCE_CREATE_PATH
-    value: project/resource/v1/_create
+    value: health-project/resource/v1/_create
   - name: EGOV_PROJECT_RESOURCE_FACILITY_PATH
-    value: project/facility/v1/_create
+    value: health-project/facility/v1/_create
   - name: EGOV_USER_SEARCH_PATH
     value: user/_search
   - name: EGOV_FACILITY_SEARCH_PATH
@@ -156,12 +165,16 @@ env: |
   - name: EGOV_FACILITY_BULK_CREATE
     value: facility/v1/bulk/_create
   - name: EGOV_HEALTH_INDIVIDUAL_SEARCH
-    value: individual/v1/_search
+    value: health-individual/v1/_search
   - name: EGOV_PLAN_FACILITY_SEARCH
     value: plan-service/plan/facility/_search
   - name: EGOV_PLAN_FACILITY_CONFIG_SEARCH
     value: plan-service/config/_search
 
+  - name: EGOV_CENSUS_SEARCH
+    value: census-service/_search
+  - name: EGOV_PLAN_SEARCH
+    value: plan-service/plan/_search
 
   - name: CMP_IDGEN_FORMAT
     value: CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]
@@ -179,7 +192,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-config
-        key: db-url
+        key: health-db-url
   {{- else }}
     valueFrom:
       configMapKeyRef:
@@ -226,7 +239,7 @@ env: |
   - name: DB_PORT
     value: "5432"
   - name: DB_SCHEMA
-    value: public
+    value: {{ .Values.namespace | default "public" }}
 
   - name: BOUNDARY_MAIN_SHEET_NAME
     value: "Boundary Data"
@@ -254,13 +267,15 @@ env: |
     value: {{ .Values.logLevel | default "info" }} 
   - name: APP_MAX_DEBUG_CHAR
     value: "{{ .Values.maxDebugChar | default "500" }}"
+  - name: DEBUG
+    value: "{{ .Values.DEBUG | default "false" }}"
   - name: READ_ME_TAB
-    value: "Read Me"  
+    value: "HCM_README_SHEETNAME"  
   - name: USER_PASSWORD_AUTO_GENERATE
     value: "false"  
   - name: USER_DEFAULT_PASSWORD
     value: "eGov@123"  
-  - name: NOT_CREATE_USER_IF_ALREADY_THERE
+  - name: MAP_USER_VIA_COMMON_PARENT
     value: "true"
   - name: CACHE_ENABLED
     value: "true"
@@ -270,3 +285,14 @@ env: |
     value: "6379"
   - name: REDIS_HOST
     value: "redis.backbone"
+
+  - name: AUTO_RETRY_IF_HTTP_ERROR
+    value: "socket hang up"
+  - name: ENABLE_DYNAMIC_TEMPLATE_FOR
+    value: {{ .Values.enableDynamicTemplate | default "" }}
+  - name: IS_CALL_GENERATE_WHEN_DELIVERY_CONDITIONS_DIFFER
+    value: {{ .Values.CallGenerateWhenDeliveryConditionsDiffer | default "false" | quote }}
+  - name: EXCLUDE_HIERARCHY_TYPE_FROM_BOUNDARY_CODES
+    value: {{ .Values.ExcludeHierarchyTypeFromBoundaryCodes | default "false" | quote }}
+  - name: EXCLUDE_BOUNDARY_NAME_AT_LAST_FROM_BOUNDARY_CODES
+    value: {{ .Values.ExcludeBoundaryTypeFromLastBoundaryCodes | default "false" | quote }}

@@ -492,6 +492,8 @@ project-factory:
   replicas: 1
   namespace: 'egov'
   maxDebugChar: '2000'
+  mdmsV2SearchEndpoint: 'mdms-v2/v2/_search'
+  mdmsV1SearchEndpoint: 'mdms-v2/v1/_search'
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 kafka-config:
